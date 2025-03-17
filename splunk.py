@@ -39,15 +39,21 @@ def run_query(query, query_num):
 
     time.sleep(5)  # Wait for login to complete
 
-    # Navigate to the Splunk search bar
+    # Navigate to Splunk search page
     driver.get(f"{SPLUNK_URL}/en-US/app/search/search")
 
     time.sleep(5)  # Wait for search page to load
 
-    # Find the search box and input query
-    search_box = driver.find_element(By.XPATH, "//textarea[@class='search-bar']")
-    search_box.send_keys(query)
-    search_box.send_keys(Keys.RETURN)
+    # Use JavaScript to set the query in the search bar
+    search_bar_selector = "textarea[class='search-bar']"
+    search_button_selector = "button[class*='search-btn']"  # Update this if needed
+
+    driver.execute_script(f"document.querySelector('{search_bar_selector}').value = `{query}`;")
+    time.sleep(2)  # Allow time for UI update
+
+    # Click the search button
+    search_button = driver.find_element(By.CSS_SELECTOR, search_button_selector)
+    search_button.click()
 
     time.sleep(10)  # Wait for results to load
 
